@@ -14,7 +14,7 @@ futures = "0.3"
 futures-util = "0.3.31"
 ```
 
-script (only run this once)
+script (put this in autoexc)
 ```luau
 local ws = WebSocket.connect("ws://127.0.0.1:6969")
 
