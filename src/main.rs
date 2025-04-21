@@ -44,9 +44,9 @@ async fn main() {
         while let Some(Ok(msg)) = read.next().await {
             if msg.is_text() {
                 let executor_file = format!("{executor_path}/{msg}");
-                let file_name = Path::new(&executor_file).file_name().unwrap().to_str().unwrap();
                 match fs::metadata(&executor_file) {
                     Ok(_) => {
+                        let file_name = Path::new(&executor_file).file_name().unwrap().to_str().unwrap();
                         let destination = format!("{roblox_path}/{file_name}");
                         let asset = format!("rbxasset://{file_name}");
 
