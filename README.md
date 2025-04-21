@@ -1,7 +1,7 @@
 # getcustomasset
 A simple getcustomasset fix written in rust, mainly for executors like awp or others where getcustomaseet is currentyl broken
 
-The build needs to be run as admin
+The build needs to be run as admin since it requires certain permissions to copy over the files
 
 dependencies
 ```toml
