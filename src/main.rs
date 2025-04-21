@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use tokio::net::TcpListener;
 use tokio_tungstenite::{accept_async, tungstenite::protocol::Message};
 use futures_util::{StreamExt,SinkExt};
+use std::path::{Path, PathBuf};
 
 async fn get_paths() -> (String, String) {
     let user = whoami::username();
@@ -43,18 +44,24 @@ async fn main() {
         while let Some(Ok(msg)) = read.next().await {
             if msg.is_text() {
                 let executor_file = format!("{executor_path}/{msg}");
-
+                let file_name = Path::new(&executor_file).file_name().unwrap().to_str().unwrap();
                 match fs::metadata(&executor_file) {
                     Ok(_) => {
-                        let destination = format!("{roblox_path}/{}", msg);
+                        let destination = format!("{roblox_path}/{file_name}");
+                        let asset = format!("rbxasset://{file_name}");
+
+                        /*
+                            I won't add a check to see if the destination already exists since
+                            assets could have the same name
+                         */
+
                         match fs::copy(&executor_file, &destination) {
                             Ok(_) => {
 
-                                let asset = format!("rbxasset://{msg}");
-                                println!("Successfully moved: {msg}");
+                                println!("Successfully moved: {executor_file}");
                                 write.send(Message::Text(asset)).await.unwrap()
                             },
-                            Err(e) => eprintln!("Failed to copy executor file: {}", e),
+                            Err(e) => eprintln!("Failed to copy executor file: {} {executor_file}", e),
                         }
                     },
                     Err(e) => {
